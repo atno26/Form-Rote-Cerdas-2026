@@ -308,6 +308,12 @@
         <div class="max-w-3xl mx-auto text-center space-y-1">
             <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Bendahara Panitia Festival Rote Cerdas 2026</p>
             <p class="text-sm sm:text-base font-bold text-slate-700">Helmi Lestrina Langgo, S.PAK.,Gr</p>
+            <div class="pt-2">
+                <button type="button" onclick="openBendaharaModal()" class="inline-flex items-center gap-1.5 text-xs font-medium text-rote-600 hover:text-rote-800 bg-rote-50 hover:bg-rote-100 px-3 py-1.5 rounded-full transition-colors cursor-pointer">
+                    <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                    <span>Panel Rekap Bendahara</span>
+                </button>
+            </div>
         </div>
 
         <!-- Footnote Create by NYM -->
@@ -317,6 +323,93 @@
             </p>
         </div>
     </footer>
+
+    <!-- Modal Panel Rekap Bendahara -->
+    <div id="bendahara-modal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in">
+            <!-- Header Modal -->
+            <div class="px-6 py-4 bg-rote-900 text-white flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="shield-check" class="w-6 h-6 text-gold-400"></i>
+                    <div>
+                        <h3 class="font-bold text-base sm:text-lg">Panel Rekapitulasi Bendahara</h3>
+                        <p class="text-xs text-rote-200">Festival Rote Cerdas 2026</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeBendaharaModal()" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors cursor-pointer">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Form Login PIN Bendahara -->
+            <div id="bendahara-login-view" class="p-8 text-center max-w-md mx-auto my-auto space-y-4">
+                <div class="w-14 h-14 rounded-full bg-rote-100 text-rote-700 mx-auto flex items-center justify-center">
+                    <i data-lucide="key-round" class="w-7 h-7"></i>
+                </div>
+                <h4 class="text-lg font-bold text-slate-800">Verifikasi Bendahara</h4>
+                <p class="text-xs sm:text-sm text-slate-500">Masukkan PIN akses untuk melihat rekap dana masuk dan bukti transfer sekolah.</p>
+                <div class="space-y-3 pt-2">
+                    <input type="password" id="bendahara-pin-input" placeholder="Masukkan PIN (Default: 2026)"
+                        class="w-full px-4 py-3 text-center tracking-widest font-bold rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-rote-500">
+                    <p id="pin-error-msg" class="hidden text-xs text-rose-600 font-medium">PIN yang Anda masukkan salah.</p>
+                    <button type="button" onclick="verifyBendaharaPin()"
+                        class="w-full py-3 rounded-xl bg-rote-700 hover:bg-rote-800 text-white font-semibold text-sm transition-colors cursor-pointer">
+                        Buka Data Rekap
+                    </button>
+                </div>
+            </div>
+
+            <!-- Konten Dashboard Rekap (Muncul setelah PIN benar) -->
+            <div id="bendahara-dashboard-view" class="hidden flex-1 flex flex-col overflow-hidden">
+                <!-- Ringkasan Statistik -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6 bg-slate-50 border-b border-slate-200">
+                    <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">Total Dana Terkumpul</p>
+                        <p id="stat-total-dana" class="text-xl sm:text-2xl font-extrabold text-emerald-600 mt-1">Rp 0</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">Total Sekolah Menyetor</p>
+                        <p id="stat-total-sekolah" class="text-xl sm:text-2xl font-extrabold text-rote-700 mt-1">0 Sekolah</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-sm">
+                        <p class="text-xs text-slate-500 font-medium">Total Guru ASN Terdata</p>
+                        <p id="stat-total-guru" class="text-xl sm:text-2xl font-extrabold text-slate-800 mt-1">0 Orang</p>
+                    </div>
+                </div>
+
+                <!-- Tabel Data -->
+                <div class="flex-1 overflow-auto p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h4 class="font-bold text-slate-800 text-sm sm:text-base">Daftar Penyetoran Masuk</h4>
+                        <button type="button" onclick="loadRekapData()" class="inline-flex items-center gap-1.5 text-xs font-semibold text-rote-700 hover:text-rote-900 bg-rote-50 px-3 py-1.5 rounded-lg cursor-pointer">
+                            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                            <span>Muat Ulang</span>
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto border border-slate-200 rounded-xl">
+                        <table class="w-full text-left border-collapse text-xs sm:text-sm">
+                            <thead>
+                                <tr class="bg-slate-100 text-slate-600 border-b border-slate-200">
+                                    <th class="py-3 px-4 font-semibold">No</th>
+                                    <th class="py-3 px-4 font-semibold">Nama Sekolah</th>
+                                    <th class="py-3 px-4 font-semibold">Kepala Sekolah</th>
+                                    <th class="py-3 px-4 font-semibold">Jumlah Dana</th>
+                                    <th class="py-3 px-4 font-semibold">Tgl Setor</th>
+                                    <th class="py-3 px-4 font-semibold text-center">Guru ASN</th>
+                                    <th class="py-3 px-4 font-semibold text-center">Bukti</th>
+                                </tr>
+                            </thead>
+                            <tbody id="rekap-table-body" class="divide-y divide-slate-100 bg-white">
+                                <tr>
+                                    <td colspan="7" class="py-8 text-center text-slate-400">Memuat data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Tombol Kontrol Musik Mengambang (Pojok Kanan Bawah) -->
     <div class="fixed bottom-5 right-5 z-50 flex items-center gap-2">
@@ -813,6 +906,112 @@
             formCard.classList.add('animate-fade-in-up', 'opacity-0');
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        /**
+         * ============================================================================
+         * LOGIKA PANEL REKAP BENDAHARA
+         * ============================================================================
+         */
+        const BENDAHARA_PIN = '2026'; // Anda dapat mengganti PIN rahasia Anda di sini
+
+        function openBendaharaModal() {
+            document.getElementById('bendahara-modal').classList.remove('hidden');
+            document.getElementById('bendahara-pin-input').value = '';
+            document.getElementById('pin-error-msg').classList.add('hidden');
+        }
+
+        function closeBendaharaModal() {
+            document.getElementById('bendahara-modal').classList.add('hidden');
+        }
+
+        function verifyBendaharaPin() {
+            const inputPin = document.getElementById('bendahara-pin-input').value;
+            if (inputPin === BENDAHARA_PIN) {
+                document.getElementById('bendahara-login-view').classList.add('hidden');
+                document.getElementById('bendahara-dashboard-view').classList.remove('hidden');
+                loadRekapData();
+            } else {
+                document.getElementById('pin-error-msg').classList.remove('hidden');
+            }
+        }
+
+        // Izinkan tekan Enter saat memasukkan PIN
+        document.getElementById('bendahara-pin-input')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifyBendaharaPin();
+        });
+
+        async function loadRekapData() {
+            const tbody = document.getElementById('rekap-table-body');
+            tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-slate-400">Mengambil data dari database...</td></tr>';
+
+            if (!isSupabaseConfigured || !supabaseClient) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="py-8 text-center text-amber-600 bg-amber-50/50 px-4">
+                            <strong>Backend Supabase Belum Dihubungkan!</strong><br>
+                            Silakan isi <code>SUPABASE_URL</code> dan <code>SUPABASE_ANON_KEY</code> pada kode HTML Anda terlebih dahulu.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient
+                    .from('penyetoran_dana')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="py-8 text-center text-slate-400">Belum ada sekolah yang menyetor dana.</td></tr>';
+                    document.getElementById('stat-total-dana').textContent = 'Rp 0';
+                    document.getElementById('stat-total-sekolah').textContent = '0 Sekolah';
+                    document.getElementById('stat-total-guru').textContent = '0 Orang';
+                    return;
+                }
+
+                let totalDana = 0;
+                let totalGuru = 0;
+                tbody.innerHTML = '';
+
+                data.forEach((row, index) => {
+                    totalDana += Number(row.jumlah_dana || 0);
+                    totalGuru += Number(row.jumlah_guru_asn || 0);
+
+                    const formattedDana = 'Rp ' + new Intl.NumberFormat('id-ID').format(row.jumlah_dana);
+                    const dateObj = new Date(row.tanggal_setor + 'T00:00:00');
+                    const formattedDate = dateObj.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 transition-colors';
+                    tr.innerHTML = `
+                        <td class="py-3 px-4 text-slate-500">${index + 1}</td>
+                        <td class="py-3 px-4 font-semibold text-slate-800">${row.nama_sekolah}</td>
+                        <td class="py-3 px-4 text-slate-600">${row.nama_kepsek}</td>
+                        <td class="py-3 px-4 font-bold text-emerald-600">${formattedDana}</td>
+                        <td class="py-3 px-4 text-slate-600">${formattedDate}</td>
+                        <td class="py-3 px-4 text-center font-medium text-slate-700">${row.jumlah_guru_asn}</td>
+                        <td class="py-3 px-4 text-center">
+                            <a href="${row.bukti_transfer_url}" target="_blank" rel="noopener noreferrer" 
+                               class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-rote-50 text-rote-700 hover:bg-rote-100 font-semibold text-xs transition-colors">
+                                <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Lihat
+                            </a>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                document.getElementById('stat-total-dana').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(totalDana);
+                document.getElementById('stat-total-sekolah').textContent = `${data.length} Sekolah`;
+                document.getElementById('stat-total-guru').textContent = `${totalGuru} Orang`;
+                lucide.createIcons();
+
+            } catch (err) {
+                console.error(err);
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-rose-600">Gagal memuat data: ${err.message}</td></tr>`;
+            }
         }
     </script>
 </body>
