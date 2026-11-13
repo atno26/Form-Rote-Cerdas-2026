@@ -14,6 +14,8 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Tone.js CDN untuk Musik Latar Instrumental Otomatis -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
     
     <style>
         /* Definisi Animasi Kustom */
@@ -79,11 +81,11 @@
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col justify-between selection:bg-rote-600 selection:text-white">
 
     <!-- Header / Banner Acara dengan Gambar Latar -->
-    <!-- Ganti URL di dalam url('...') dengan link gambar Anda atau path file gambar di GitHub Anda (contoh: url('assets/banner.jpg')) -->
-    <header class="text-white shadow-lg relative overflow-hidden bg-slate-900" 
-            style="background-image: url('https://github.com/atno26/Form-Rote-Cerdas-2026/blob/main/banner-rote.jpg'); background-size: cover; background-position: center;">
+    <header class="text-white shadow-lg relative overflow-hidden bg-slate-900 w-full" 
+            style="background-image: url('https://raw.githubusercontent.com/atno26/Form-Rote-Cerdas-2026/main/banner.jpeg'); background-size: 100% 100%; background-position: center; background-repeat: no-repeat;">
         
         <!-- Overlay Gelap Transparan (Agar teks tetap terbaca jelas meski gambar latar terang) -->
+        <div class="absolute inset-0 bg-slate-900/65 pointer-events-none"></div>
         <div class="absolute inset-0 bg-slate-900/70 pointer-events-none"></div>
 
         <div class="max-w-4xl mx-auto px-4 py-8 md:py-12 lg:py-16 relative z-10 text-center opacity-0 animate-fade-in-up">
@@ -128,10 +130,6 @@
                         <p class="text-xs md:text-sm text-slate-500">Pastikan data dan bukti transfer sudah sesuai</p>
                     </div>
                 </div>
-                <span id="connection-badge" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200">
-                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
-                    Mode Demo
-                </span>
             </div>
 
             <!-- Form Input -->
@@ -147,8 +145,7 @@
                             <i data-lucide="school" class="w-5 h-5"></i>
                         </div>
                         <input type="text" id="nama_sekolah" name="nama_sekolah" required
-                            placeholder="Contoh: SD Inpres Ba'a / SMP Negeri 1 Lobalain"
-                            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
+                            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
                     </div>
                 </div>
 
@@ -162,8 +159,7 @@
                             <i data-lucide="user-check" class="w-5 h-5"></i>
                         </div>
                         <input type="text" id="nama_kepsek" name="nama_kepsek" required
-                            placeholder="Masukkan nama lengkap beserta gelar"
-                            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
+                            class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
                     </div>
                 </div>
 
@@ -179,8 +175,7 @@
                                 <span class="text-slate-500 font-semibold text-sm">Rp</span>
                             </div>
                             <input type="text" id="jumlah_dana_display" inputmode="numeric" required
-                                placeholder="0"
-                                class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 font-semibold placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
+                                class="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 font-semibold focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
                             <!-- Input tersembunyi untuk menyimpan nilai angka murni -->
                             <input type="hidden" id="jumlah_dana" name="jumlah_dana">
                         </div>
@@ -211,140 +206,7 @@
                             <i data-lucide="users" class="w-5 h-5"></i>
                         </div>
                         <input type="number" id="jumlah_guru_asn" name="jumlah_guru_asn" min="0" required
-                            placeholder="Contoh: 12"
-                            class="w-full pl-11 pr-16 py-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-900 placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-rote-500/20 focus:border-rote-600 transition-all text-sm sm:text-base">
-                        <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
-                            <span class="text-slate-400 text-xs font-medium">Orang</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6. Unggah Bukti Transfer -->
-                <div>
-                    <label class="block text-sm md:text-base font-semibold text-slate-700 mb-1.5 md:mb-2">
-                        6. Unggah Bukti Transfer <span class="text-rose-500">*</span>
-                    </label>
-                    
-                    <!-- Area Dropzone / File Browser -->
-                    <div id="dropzone" class="relative border-2 border-dashed border-slate-300 rounded-2xl p-6 md:p-10 text-center hover:border-rote-500 hover:bg-rote-50/30 transition-all cursor-pointer group">
-                        <input type="file" id="bukti_transfer" name="bukti_transfer" accept="image/png, image/jpeg, image/jpg, application/pdf" required
-                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
-                        
-                        <!-- Tampilan Default Sebelum File Dipilih -->
-                        <div id="upload-placeholder" class="space-y-2">
-                            <div class="w-12 h-12 rounded-full bg-rote-50 text-rote-600 mx-auto flex items-center justify-center group-hover:scale-110 transition-transform">
-                                <i data-lucide="upload-cloud" class="w-6 h-6"></i>
-                            </div>
-                            <div class="text-sm text-slate-600">
-                                <span class="font-semibold text-rote-600 underline decoration-rote-300 underline-offset-2">Klik untuk memilih file</span> atau seret file ke sini
-                            </div>
-                            <p class="text-xs text-slate-400">
-                                Format didukung: JPG, PNG, atau PDF (Maks. 5 MB)
-                            </p>
-                        </div>
-
-                        <!-- Tampilan Preview Setelah File Dipilih -->
-                        <div id="file-preview-container" class="hidden relative z-20">
-                            <div class="flex items-center justify-between bg-white p-3 rounded-xl border border-slate-200 shadow-sm text-left">
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <div id="file-icon-box" class="w-10 h-10 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                                        <i data-lucide="file-check" class="w-5 h-5"></i>
-                                    </div>
-                                    <div class="truncate">
-                                        <p id="file-name" class="text-sm font-semibold text-slate-800 truncate">bukti-transfer.jpg</p>
-                                        <p id="file-size" class="text-xs text-slate-500">1.2 MB</p>
-                                    </div>
-                                </div>
-                                <button type="button" id="remove-file-btn" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors" title="Hapus file">
-                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
-                                </button>
-                            </div>
-                            <!-- Preview Gambar Jika Berupa Foto -->
-                            <img id="image-preview" src="" alt="Preview Bukti Transfer" class="hidden mt-3 max-h-48 mx-auto rounded-xl border border-slate-200 object-contain shadow-sm">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7. Tombol Submit -->
-                <div class="pt-4 md:pt-6">
-                    <button type="submit" id="submit-btn"
-                        class="w-full py-4 px-6 rounded-xl bg-gradient-to-r from-rote-700 to-rote-600 hover:from-rote-800 hover:to-rote-700 text-white font-bold text-base md:text-lg shadow-lg shadow-rote-600/25 hover:shadow-rote-600/40 active:scale-[0.99] transition-all flex items-center justify-center gap-2 cursor-pointer">
-                        <i data-lucide="send" class="w-5 h-5 md:w-6 md:h-6"></i>
-                        <span>Submit Data Penyetoran</span>
-                    </button>
-                </div>
-
-            </form>
-        </div>
-
-        <!-- Kartu Sukses Setelah Submit -->
-        <div id="success-card" class="hidden bg-white rounded-2xl shadow-xl shadow-slate-200/60 border border-slate-100 p-8 sm:p-10 text-center space-y-6 transition-all duration-500">
-            <div class="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center shadow-inner">
-                <i data-lucide="check-circle-2" class="w-11 h-11"></i>
-            </div>
-            
-            <div class="space-y-2">
-                <span class="inline-block px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-bold uppercase tracking-wider">
-                    Penyetoran Berhasil Tercatat
-                </span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-snug">
-                    Terima Kasih atas Partisipasi Anda Menyukseskan Festival Rote Cerdas Tahun 2026
-                </h2>
-                <p class="text-slate-500 text-sm sm:text-base max-w-md mx-auto">
-                    Data penyetoran dan bukti transfer dari sekolah Anda telah berhasil disimpan ke dalam sistem panitia.
-                </p>
-            </div>
-
-            <!-- Ringkasan Data yang Dikirim -->
-            <div class="bg-slate-50 rounded-xl p-5 border border-slate-200/80 text-left max-w-md mx-auto space-y-2.5 text-sm">
-                <div class="flex justify-between gap-4">
-                    <span class="text-slate-500">Sekolah:</span>
-                    <span id="summary-sekolah" class="font-semibold text-slate-800 text-right">-</span>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <span class="text-slate-500">Kepala Sekolah:</span>
-                    <span id="summary-kepsek" class="font-semibold text-slate-800 text-right">-</span>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <span class="text-slate-500">Jumlah Setoran:</span>
-                    <span id="summary-dana" class="font-bold text-emerald-700 text-right">-</span>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <span class="text-slate-500">Tanggal Setor:</span>
-                    <span id="summary-tanggal" class="font-semibold text-slate-800 text-right">-</span>
-                </div>
-                <div class="flex justify-between gap-4">
-                    <span class="text-slate-500">Guru ASN:</span>
-                    <span id="summary-guru" class="font-semibold text-slate-800 text-right">-</span>
-                </div>
-            </div>
-
-            <div class="pt-2">
-                <button type="button" onclick="resetFormToNew()"
-                    class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition-colors">
-                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                    <span>Input Data Sekolah Lainnya</span>
-                </button>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Footnote / Footer Bendahara -->
-    <footer class="bg-white border-t border-slate-200/80 py-6 px-4 mt-8 relative">
-        <div class="max-w-3xl mx-auto text-center space-y-1.5">
-            <p class="text-xs text-slate-400 uppercase tracking-wider font-semibold">
-                Bendahara Panitia Festival Rote Cerdas &bull; Hari Guru Tahun 2026
-            </p>
-            <p class="text-sm sm:text-base font-bold text-slate-800">
-                Helmi Lestrina Langgo, S.PAK.,Gr
-            </p>
-            <p class="text-xs text-slate-400 pt-1">
-                &copy; 2026 Panitia Festival Rote Cerdas. Seluruh hak cipta dilindungi.
-            </p>
-        </div>
-        
-        <!-- Footnote Create by NYM -->
+        /* Footnote Create by NYM */
         <div class="absolute bottom-2 right-3 md:bottom-4 md:right-6">
             <p class="text-[10px] md:text-xs text-slate-300 hover:text-slate-400 transition-colors font-medium cursor-default">
                 Create by NYM
@@ -352,10 +214,142 @@
         </div>
     </footer>
 
+    <!-- Tombol Kontrol Musik Mengambang (Pojok Kanan Bawah) -->
+    <div class="fixed bottom-5 right-5 z-50 flex items-center gap-2">
+        <button id="music-toggle-btn" type="button" onclick="toggleBackgroundMusic()" title="Putar / Hentikan Musik Latar"
+            class="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-rote-800/95 hover:bg-rote-900 text-white shadow-xl shadow-rote-900/30 backdrop-blur-md border border-white/20 transition-all hover:scale-105 active:scale-95 cursor-pointer">
+            <span id="music-pulse" class="relative flex h-2.5 w-2.5">
+                <span id="music-ping" class="hidden animate-ping absolute inline-flex h-full w-full rounded-full bg-gold-400 opacity-75"></span>
+                <span id="music-dot" class="relative inline-flex rounded-full h-2.5 w-2.5 bg-slate-400"></span>
+            </span>
+            <i id="music-icon" data-lucide="volume-x" class="w-4 h-4 text-gold-400"></i>
+            <span id="music-label" class="text-xs font-semibold tracking-wide">Putar Musik</span>
+        </button>
+    </div>
+
+    <!-- Elemen Audio MP3 Opsional (Jika Anda ingin menggunakan file MP3 sendiri dari GitHub) -->
+    <audio id="custom-bg-audio" loop preload="auto">
+        <!-- Ganti src di bawah ini dengan link raw MP3 Anda di GitHub jika ingin memakai lagu sendiri -->
+        <!-- <source src="https://raw.githubusercontent.com/atno26/Form-Rote-Cerdas-2026/main/musik.mp3" type="audio/mpeg"> -->
+    </audio>
+
     <!-- Script Aplikasi & Integrasi Supabase -->
     <script>
         // Inisialisasi ikon Lucide
         lucide.createIcons();
+
+        /**
+         * ============================================================================
+         * SISTEM AUTOPLAY MUSIK LATAR
+         * ============================================================================
+         * Mendukung 2 mode:
+         * 1. File MP3 kustom dari GitHub (jika tag <source> pada #custom-bg-audio diisi).
+         * 2. Musik Instrumental Melodi Hangat bawaan (menggunakan Tone.js) jika belum ada MP3.
+         */
+        let isMusicPlaying = false;
+        let synthLoop = null;
+        let bgSynth = null;
+        const customAudioEl = document.getElementById('custom-bg-audio');
+        const hasCustomMp3 = customAudioEl.querySelector('source') !== null;
+
+        function updateMusicUI(playing) {
+            isMusicPlaying = playing;
+            const icon = document.getElementById('music-icon');
+            const label = document.getElementById('music-label');
+            const ping = document.getElementById('music-ping');
+            const dot = document.getElementById('music-dot');
+
+            if (playing) {
+                icon.setAttribute('data-lucide', 'volume-2');
+                label.textContent = 'Musik Aktif';
+                ping.classList.remove('hidden');
+                dot.classList.replace('bg-slate-400', 'bg-gold-400');
+            } else {
+                icon.setAttribute('data-lucide', 'volume-x');
+                label.textContent = 'Putar Musik';
+                ping.classList.add('hidden');
+                dot.classList.replace('bg-gold-400', 'bg-slate-400');
+            }
+            lucide.createIcons();
+        }
+
+        async function startBackgroundMusic() {
+            if (isMusicPlaying) return;
+
+            try {
+                if (hasCustomMp3) {
+                    customAudioEl.volume = 0.4;
+                    await customAudioEl.play();
+                    updateMusicUI(true);
+                } else {
+                    // Jalankan melodi instrumental lembut menggunakan Tone.js
+                    await Tone.start();
+                    if (!bgSynth) {
+                        bgSynth = new Tone.PolySynth(Tone.Synth, {
+                            oscillator: { type: 'sine' },
+                            envelope: { attack: 0.4, decay: 0.5, sustain: 0.4, release: 1.5 }
+                        }).toDestination();
+                        bgSynth.volume.value = -14; // Volume lembut agar nyaman di telinga
+
+                        // Progresi nada inspiratif & hangat (G Major - D Major - Em - C Major)
+                        const chords = [
+                            ['G3', 'B3', 'D4', 'G4'],
+                            ['D3', 'F#3', 'A3', 'D4'],
+                            ['E3', 'G3', 'B3', 'E4'],
+                            ['C3', 'E3', 'G3', 'C4']
+                        ];
+                        let step = 0;
+                        synthLoop = new Tone.Loop((time) => {
+                            const chord = chords[step % chords.length];
+                            bgSynth.triggerAttackRelease(chord, '2n', time);
+                            step++;
+                        }, '1m');
+                    }
+                    Tone.Transport.bpm.value = 76;
+                    synthLoop.start(0);
+                    Tone.Transport.start();
+                    updateMusicUI(true);
+                }
+            } catch (err) {
+                // Browser menahan autoplay hingga ada interaksi pengguna
+                updateMusicUI(false);
+            }
+        }
+
+        function stopBackgroundMusic() {
+            if (hasCustomMp3) {
+                customAudioEl.pause();
+            } else if (typeof Tone !== 'undefined') {
+                Tone.Transport.pause();
+            }
+            updateMusicUI(false);
+        }
+
+        function toggleBackgroundMusic() {
+            if (isMusicPlaying) {
+                stopBackgroundMusic();
+            } else {
+                startBackgroundMusic();
+            }
+        }
+
+        // Coba jalankan otomatis saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            startBackgroundMusic();
+        });
+
+        // Fallback Cerdas: Jika browser memblokir autoplay awal, langsung putar musik pada sentuhan/klik pertama di layar
+        ['click', 'touchstart', 'keydown'].forEach(evt => {
+            document.addEventListener(evt, function unlockAudioOnFirstInteraction() {
+                if (!isMusicPlaying) {
+                    startBackgroundMusic();
+                }
+                // Hapus listener setelah interaksi pertama agar tombol mute manual user tetap dihormati
+                ['click', 'touchstart', 'keydown'].forEach(e => {
+                    document.removeEventListener(e, unlockAudioOnFirstInteraction);
+                });
+            }, { once: true });
+        });
 
         /**
          * ============================================================================
@@ -392,9 +386,6 @@
 
         if (isSupabaseConfigured) {
             supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            const badge = document.getElementById('connection-badge');
-            badge.className = 'inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200';
-            badge.innerHTML = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Terhubung Supabase';
         }
 
         // Elemen DOM
