@@ -332,7 +332,7 @@
     </div>
 
     <!-- Elemen Audio MP3 dari GitHub Anda (Aktif Otomatis) -->
-    <audio id="custom-bg-audio" autoplay loop preload="auto">
+    <audio id="custom-bg-audio" autoplay loop preload="auto" playsinline>
         <source src="https://raw.githubusercontent.com/atno26/Form-Rote-Cerdas-2026/main/musik.mp3" type="audio/mpeg">
     </audio>
 
@@ -350,6 +350,7 @@
          * 2. Musik Instrumental Melodi Hangat bawaan (menggunakan Tone.js) jika belum ada MP3.
          */
         let isMusicPlaying = false;
+        let userExplicitlyMuted = false;
         let synthLoop = null;
         let bgSynth = null;
         const customAudioEl = document.getElementById('custom-bg-audio');
@@ -377,13 +378,14 @@
         }
 
         async function startBackgroundMusic() {
-            if (isMusicPlaying) return;
+            if (isMusicPlaying) return true;
 
             try {
                 if (hasCustomMp3) {
-                    customAudioEl.volume = 0.4;
+                    customAudioEl.volume = 0.5;
                     await customAudioEl.play();
                     updateMusicUI(true);
+                    return true;
                 } else {
                     // Jalankan melodi instrumental lembut menggunakan Tone.js
                     await Tone.start();
@@ -412,10 +414,12 @@
                     synthLoop.start(0);
                     Tone.Transport.start();
                     updateMusicUI(true);
+                    return true;
                 }
             } catch (err) {
                 // Browser menahan autoplay hingga ada interaksi pengguna
                 updateMusicUI(false);
+                return false;
             }
         }
 
@@ -430,8 +434,10 @@
 
         function toggleBackgroundMusic() {
             if (isMusicPlaying) {
+                userExplicitlyMuted = true;
                 stopBackgroundMusic();
             } else {
+                userExplicitlyMuted = false;
                 startBackgroundMusic();
             }
         }
@@ -439,6 +445,26 @@
         // Coba jalankan otomatis saat halaman dimuat
         window.addEventListener('DOMContentLoaded', () => {
             startBackgroundMusic();
+        });
+
+        // Putar otomatis saat layar disentuh/diklik pertama kali hingga musik benar-benar berhasil menyala
+        const interactionEvents = ['pointerdown', 'touchstart', 'click', 'keydown'];
+        async function unlockAudioOnInteraction(e) {
+            // Abaikan jika user sengaja menekan tombol mute atau jika musik sudah aktif
+            if (userExplicitlyMuted || isMusicPlaying || e.target.closest('#music-toggle-btn')) {
+                return;
+            }
+
+            const started = await startBackgroundMusic();
+            if (started) {
+                interactionEvents.forEach(evt => {
+                    document.removeEventListener(evt, unlockAudioOnInteraction, true);
+                });
+            }
+        }
+
+        interactionEvents.forEach(evt => {
+            document.addEventListener(evt, unlockAudioOnInteraction, true);
         });
 
         // Fallback Cerdas: Jika browser memblokir autoplay awal, langsung putar musik pada sentuhan/klik pertama di layar
